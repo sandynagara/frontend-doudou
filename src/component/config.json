@@ -1,0 +1,6 @@
+{
+    "SERVER_API_Develop": "http://localhost:5000/api/",
+    "SERVER_GEOSERVER_Develop": "http://localhost:8080/",
+    "SERVER_API": "http://geoportal.ppids.ft.ugm.ac.id/sitaru/api/",
+    "SERVER_GEOSERVER": "http://geoportal.ppids.ft.ugm.ac.id/"
+}

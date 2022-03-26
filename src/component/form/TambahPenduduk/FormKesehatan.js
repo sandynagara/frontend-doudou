@@ -1,99 +1,207 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import SelectForm from './SelectForm'
+import {GrFormAdd} from "react-icons/gr"
+import InputForm from './InputForm'
+import ButtonTambah from './ButtonTambah'
+import DaftarPenyakit from './DaftarPenyakit'
 
-function FormKesehatan() {
+function FormKesehatan({setKesehatan}) {
 
-    var list = ["Tidak","Ya"]
+    const [jaminanKesehatan, setJaminanKesehatan] = useState("Peserta")
+
+    const [penyakitTambah, setPenyakitTambah] = useState(false)
+    const [daftarPenyakit, setDaftarPenyakit] = useState([])
+    const [penyakit, setPenyakit] = useState("Muntaber")
+    const [idDeletePenyakit, setIdDeletePenyakit] = useState(false)
+    const [namaPenyakit, setNamaPenyakit] = useState(false)
+
+    const [faskesTambah, setFaskesTambah] = useState(false)
+    const [daftarFaskes, setDaftarFaskes] = useState([])
+    const [faskes, setFaskes] = useState("Rumah sakit")
+    const [idDeleteFaskes, setIdDeleteFaskes] = useState(false)
+    const [jumlahFaskes, setJumlahFaskes] = useState(false)
+
+    const [disabilitasTambah, setDisabilitasTambah] = useState(false)
+    const [daftarDisabilitas, setDaftarDisabilitas] = useState([])
+    const [disabilitas, setDisabilitas] = useState("Tunanetra (Buta)")
+    const [idDeleteDisabilitas, setIdDeleteDisabilitas] = useState(false)
+
+    var tambahPenyakit = () => {
+        var dataPenyakit
+        if(namaPenyakit){
+            dataPenyakit = {
+                "id":Math.random().toString(16).slice(2),
+                "judul":namaPenyakit,
+            }
+        }else{
+            dataPenyakit = {
+                "id":Math.random().toString(16).slice(2),
+                "judul":penyakit,
+            }
+        }
+        
+        setDaftarPenyakit(daftarPenyakit.concat(dataPenyakit))
+        setPenyakitTambah(false)
+    }
+
+    var tambahFaskes = () => {
+
+        var dataFaskes = {
+            "id":Math.random().toString(16).slice(2),
+            "judul":faskes,
+            "isi":jumlahFaskes
+        }
+        
+        setDaftarFaskes(daftarFaskes.concat(dataFaskes))
+        setFaskesTambah(false)
+    }
+
+    var tambahDisabilitas = () => {
+
+        var dataDisabilitas = {
+            "id":Math.random().toString(16).slice(2),
+            "judul":disabilitas,
+        }
+        
+        setDaftarDisabilitas(daftarDisabilitas.concat(dataDisabilitas))
+        setDisabilitasTambah(false)
+    }
+
+    useEffect(() => {
+        var lists = daftarPenyakit.filter(x => {
+          return x.id !== idDeletePenyakit;
+        })
+        setDaftarPenyakit(lists)
+    }, [idDeletePenyakit])
+
+    useEffect(() => {
+        var lists = daftarFaskes.filter(x => {
+          return x.id !== idDeleteFaskes;
+        })
+        setDaftarFaskes(lists)
+    }, [idDeleteFaskes])
+
+    useEffect(() => {
+        var lists = daftarDisabilitas.filter(x => {
+          return x.id !== idDeleteDisabilitas;
+        })
+        setDaftarDisabilitas(lists)
+    }, [idDeleteDisabilitas])
+
+    useEffect(() => {
+      var kesehatan = {
+        penyakit:daftarPenyakit,
+        jaminan_kesehatan:jaminanKesehatan,
+        kunjungan_faskes:daftarFaskes,
+        disabilitas:daftarDisabilitas
+      }
+      setKesehatan(kesehatan)
+    }, [daftarDisabilitas,daftarFaskes,daftarPenyakit,jaminanKesehatan,setKesehatan])
+    
+
+    useEffect(() => {
+        if(penyakit !== "Lainnya"){
+            setNamaPenyakit(false)
+        }
+    }, [penyakit])
+
+
+    var listPenyakit = ["Muntaber","Demam Berdarah","Campak","Malaria","Flu burung/SARS","Covid-19","Hepatitis B","Hepatitis E","Difteri","Chikungunya","Leplospirosis","Kolera","Gizi buruk","Jantung","TBC paru-paru","Kanker","Diabetes","Lumpuh","Lainnya"]
     var listJaminan = ["Peserta","Bukan peserta"]
+    var listFaskes = ["Rumah sakit","Rumah sakit bersalin","Puskesmas dengan rawat inap","Puskesmas tanpa rawat inap","Puskesmas pembantu","Poliklinik/balai pengobatan","Tempat praktik dokter","Rumah bersalin","Tempat praktik bidan","Poskesdes","Polindes","Apotik","Toko khusus obat/jamu","Posyandu","Posbindu","Tempat praktik dukun bayi/bersalin/paraji"]
+    var listDisablitasi = ["Tunanetra (Buta)","Tunarungu (Tuli)","Tunawicara (Bisu)","Tunarungu-wicara (Tuli-Bisu)","Tunadaksa (Cacat tubuh)","Tunagrahita (Cacat mental, keterbelakangan mental)","Tunalaras (Eks-sakit jiwa, gangguan mengendalikan emosi dan kontrol sosial)","Cacat eks-sakit kusta, pernah sakit kusta dan dinyatakan sembuh oleh dokter","Cacat ganda (cacat fisik dan cacat mental)","Dipasung"]
 
   return (
     <div className='overflow-y-scroll scrollbar'
         style={{
-          height:"450px"
+          height:"430px"
           }}
     >
-        <div className='py-2'><b>Penyakit yang diderita setahun terakhir</b></div>
-        <div>
-          <div className='py-2'>Muntaber</div>
-          <SelectForm name="Muntaber" list={list}/>
+
+        <div className='flex items-center'>
+            <div className='py-2'>Penyakit yang diderita setahun terakhir</div>
+            <div className="bg-gray-200 mx-2 rounded-full cursor-pointer hover:bg-blue-400"
+                onClick={()=>{setPenyakitTambah(true)}}
+            >
+                <GrFormAdd className='hover:fill-white'/>
+            </div>  
         </div>
+
+        {penyakitTambah && 
+            <div>
+                <SelectForm name="nama-penyakit" list={listPenyakit} onChange={(e)=>{setPenyakit(e.target.value)}}/>
+                {penyakit === "Lainnya" &&  
+                    <div className='py-2'>
+                        <InputForm placeholder="Nama Penyakit" onChange={(e)=>{setNamaPenyakit(e.target.value)}}/>
+                    </div>
+                }
+                <div className='py-2'>
+                    <ButtonTambah click={tambahPenyakit}/>
+                </div>    
+            </div>
+        }
+        
+
+        {daftarPenyakit !== [] && daftarPenyakit.map((e,index) => {
+        return  <DaftarPenyakit list={e} judul="Nama Penyakit" key={index} setIdDelete={setIdDeletePenyakit}/>
+        })
+        }
+
         <div>
-          <div className='py-2'>Demam Berdarah</div>
-          <SelectForm name="Demam Berdarah" list={list}/>
+            <div className='py-2'>Jaminan sosial kesehatan</div>
+            <SelectForm name="jaminan-kesehatan" list={listJaminan} onChange={(e)=>setJaminanKesehatan(e.target.value)}/>
         </div>
-        <div>
-          <div className='py-2'>Campak</div>
-          <SelectForm name="Campak" list={list}/>
+        
+
+        <div className='flex items-center'>
+            <div className='py-2'>Kunjungan ke fasilitas kesehatan dalam setahun terakhir</div>
+            <div className="bg-gray-200 mx-2 rounded-full cursor-pointer hover:bg-blue-400"
+                onClick={()=>{setFaskesTambah(true)}}
+            >
+                <GrFormAdd className='hover:fill-white'/>
+            </div>  
         </div>
-        <div>
-          <div className='py-2'>Malaria</div>
-          <SelectForm name="Malaria" list={list}/>
+
+        {faskesTambah && 
+            <div>
+                <SelectForm name="faskes" list={listFaskes} onChange={(e)=>{setFaskes(e.target.value)}}/>
+                <div className='py-2'>
+                    <InputForm placeholder="Jumlah" onChange={(e)=>{setJumlahFaskes(e.target.value)}}/>
+                </div>
+                <div className='pb-2'>
+                    <ButtonTambah click={tambahFaskes}/>
+                </div>
+            </div>
+        }
+        
+        {daftarFaskes !== [] && daftarFaskes.map((e,index) => {
+            return  <DaftarPenyakit list={e} judul="Fasilitas kesehatan" key={index} isi="Jumlah" setIdDelete={setIdDeleteFaskes}/>
+            })
+        }
+
+        <div className='flex items-center'>
+            <div className='py-2'>Disabilitas</div>
+            <div className="bg-gray-200 mx-2 rounded-full cursor-pointer hover:bg-blue-400"
+                onClick={()=>{setDisabilitasTambah(true)}}
+            >
+                <GrFormAdd className='hover:fill-white'/>
+            </div>  
         </div>
-        <div>
-          <div className='py-2'>Flu burung/SARS</div>
-          <SelectForm name="Flu burung/SARS" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Covid-19</div>
-          <SelectForm name="Covid-19" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Hepatitis B</div>
-          <SelectForm name="Hepatitis B" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Hepatitis E</div>
-          <SelectForm name="Hepatitis E" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Difteri</div>
-          <SelectForm name="Difteri" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Chikungunya</div>
-          <SelectForm name="Chikungunya" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Leplospirosis</div>
-          <SelectForm name="Leplospirosis" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Kolera</div>
-          <SelectForm name="Kolera" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Gizi buruk</div>
-          <SelectForm name="Gizi buruk" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Jantung</div>
-          <SelectForm name="Jantung" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>TBC paru-paru</div>
-          <SelectForm name="TBC" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Kanker</div>
-          <SelectForm name="Kanker" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Diabetes</div>
-          <SelectForm name="Diabetes" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Lumpuh</div>
-          <SelectForm name="Lumpuh" list={list}/>
-        </div>
-        <div>
-          <div className='py-2'>Lainnya</div>
-          <SelectForm name="Lainnya" list={list}/>
-        </div>
-        <div className='py-2'><b>Kunjungan ke fasilitas kesehatan dalam setahun terakhir</b></div>
-        <div>
-          <div className='py-2'>Jaminan sosial kesehatan</div>
-          <SelectForm name="jaminan-kesehatan" list={listJaminan}/>
-        </div>
+
+        {disabilitasTambah && 
+            <div>
+                <SelectForm name="faskes" list={listDisablitasi} onChange={(e)=>{setDisabilitas(e.target.value)}}/>
+                <div className='py-2'>
+                    <ButtonTambah click={tambahDisabilitas}/>
+                </div>
+            </div>
+        }
+        
+        {daftarDisabilitas !== [] && daftarDisabilitas.map((e,index) => {
+            return  <DaftarPenyakit list={e} judul="Disabilitas" key={index} setIdDelete={setIdDeleteDisabilitas}/>
+            })
+        }
+        
     </div>
   )
 }

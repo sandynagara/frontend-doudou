@@ -1,81 +1,137 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
+import {RiErrorWarningFill} from "react-icons/ri"
 import SelectForm from './SelectForm'
 import InputForm from './InputForm'
 
-function FormIndividu() {
+const list = {
+  "Jenis kelamin":["Laki-laki","Perempuan"],
+  "Agama":["Islam","Kristen","Katolik","Buddha","Hindu"],
+  "Pernikanan":["Kawin","Tidak kawin","Duda/Janda"],
+  "Warga negara":["WNI","WNA"]
+}
 
-    var list = {
-        "Jenis kelamin":["Laki-laki","Perempuan"],
-        "Agama":["Islam","Kristen","Katolik","Buddha","Hindu"],
-        "Pernikanan":["Kawin","Tidak kawin","Duda/Janda"],
-        "Warga negara":["WNI","WNA"]
+function FormIndividu({setIndividu,warning}) {
+
+  const [kk, setKk] = useState("")
+  const [nik, setNik] = useState("")
+  const [nama, setNama] = useState("")
+  const [kelamin, setKelamin] = useState("Laki-laki")
+  const [lahir, setLahir] = useState("")
+  const [perkawinan, setPerkawinan] = useState("Kawin")
+  const [agama, setAgama] = useState("Islam")
+  const [suku, setSuku] = useState("")
+  const [wargaNegara, setWargaNegara] = useState("WNI")
+  const [hp, setHp] = useState("")
+  const [nomorWa, setNomorWa] = useState("")
+  const [email, setEmail] = useState("")
+  const [fb, setFb] = useState("")
+  const [twitter, setTwitter] = useState("")
+  const [instagram, setInstagram] = useState("")
+
+  useEffect(() => {
+      var individu = {
+        kk:kk,
+        nik:nik,
+        nama:nama,
+        kelamin:kelamin,
+        lahir:lahir,
+        perkawinan:perkawinan,
+        agama:agama,
+        suku:suku,
+        warga_negara:wargaNegara,
+        hp:hp,
+        nomor_wa:nomorWa,
+        email:email,
+        fb:fb,
+        twitter:twitter,
+        instagram:instagram
       }
+      if(kk !== "" && nik !=="" && nama !== "" && lahir !==""){
+        warning(false)
+      }else{
+        warning(true)
+      }
+      setIndividu(individu)
+  }, [kk,nik,nama,kelamin,lahir,perkawinan,agama,suku,wargaNegara,hp,nomorWa,email,fb,twitter,instagram,setIndividu])
+  
 
   return (
     <div className='overflow-y-scroll scrollbar'
         style={{
-          height:"450px"
+          height:"430px"
           }}
     >
         <div>
-          <div className='py-2'>Nomor Kartu Keluarga</div>
-          <InputForm placeholder="Nomor Kartu Keluarga" name="kk-individu"/>
+          <div className='flex items-center'>
+            <div className='py-2 mr-2'>Nomor Kartu Keluarga</div>
+            {kk === "" &&  <RiErrorWarningFill style={{color:"red"}}/>}
+          </div>
+          <InputForm placeholder="Nomor Kartu Keluarga" name="kk-individu" wajib={true} onChange={(e)=>{setKk(e.target.value)}}/>
         </div>
         <div>
-          <div className='py-2'>NIK</div>
-          <InputForm placeholder="NIK" name="nik-Individu"/>
+          <div className='flex items-center'>
+            <div className='py-2 mr-2'>NIK</div>
+            {nik === "" &&  <RiErrorWarningFill style={{color:"red"}}/>}
+          </div>
+          <InputForm placeholder="NIK" name="nik-Individu" wajib={true} onChange={(e)=>{setNik(e.target.value)}}/>
         </div>
         <div>
-          <div className='py-2'>Nama</div>
-          <InputForm placeholder="Nama" name="nama-individu"/>
+          <div className='flex items-center'>
+            <div className='py-2 mr-2'>Nama</div>
+            {nama === "" &&  <RiErrorWarningFill style={{color:"red"}}/>}
+          </div>
+          <InputForm placeholder="Nama" name="nama-individu" wajib={true} onChange={(e)=>{setNama(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Jenis Kelamin</div>
-          <SelectForm name="jenis-kelamin" list={list["Jenis kelamin"]}/>
+          <SelectForm name="jenis-kelamin" list={list["Jenis kelamin"]} onChange={(e)=>{setKelamin(e.target.value)}}/>
         </div>
         <div>
-          <div className='py-2'>Tempat lahir</div>
-          <InputForm placeholder="Tempat lahir" name="tempat-lahir"/>
+          <div className='flex items-center'>
+            <div className='py-2 mr-2'>Tempat lahir</div>
+            {lahir === "" &&  <RiErrorWarningFill style={{color:"red"}}/>}
+          </div>
+          <InputForm placeholder="Tempat lahir" name="tempat-lahir" wajib={true} onChange={(e)=>{setLahir(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Status Pernikanan</div>
-          <SelectForm name="pernikanan-individu" list={list["Pernikanan"]}/>
+          <SelectForm name="pernikanan-individu" list={list["Pernikanan"]} onChange={(e)=>{setPerkawinan(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Agama</div>
-          <SelectForm name="agama" list={list["Agama"]}/>
+          <SelectForm name="agama" list={list["Agama"]} onChange={(e)=>{setAgama(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Suku bangsa</div>
-          <InputForm placeholder="Suku Bangsa" name="suku-individu"/>
+          <InputForm placeholder="Suku Bangsa" name="suku-individu" onChange={(e)=>{setSuku(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Warga negara</div>
-          <SelectForm name="warga negara" list={list["Warga negara"]}/>
+          <SelectForm name="warga negara" list={list["Warga negara"]} onChange={(e)=>{setWargaNegara(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Nomor HP</div>
-          <InputForm placeholder="Nomor HP" name="hp-individu"/>
+          <InputForm placeholder="Nomor HP" name="hp-individu" onChange={(e)=>{setHp(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Nomor untuk Whatsapp</div>
-          <InputForm placeholder="Nomor untuk Whatsapp" name="wa-individu"/>
+          <InputForm placeholder="Nomor untuk Whatsapp" name="wa-individu" onChange={(e)=>{setNomorWa(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Alamat email pribadi</div>
-          <InputForm placeholder="Alamat email pribadi" name="email-individu"/>
+          <InputForm placeholder="Alamat email pribadi" name="email-individu" onChange={(e)=>{setEmail(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Alamat Facebook</div>
-          <InputForm placeholder="Alamat Facebook pribadi" name="fb-individu"/>
+          <InputForm placeholder="Alamat Facebook pribadi" name="fb-individu" onChange={(e)=>{setFb(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Alamat Twitter</div>
-          <InputForm placeholder="Alamat twitter pribadi" name="twitter-individu"/>
+          <InputForm placeholder="Alamat twitter pribadi" name="twitter-individu" onChange={(e)=>{setTwitter(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Alamat Instagram</div>
-          <InputForm placeholder="Alamat Instagram pribadi" name="ig-individu"/>
+          <InputForm placeholder="Alamat Instagram pribadi" name="ig-individu" onChange={(e)=>{setInstagram(e.target.value)}}/>
         </div>
     </div>
   )
