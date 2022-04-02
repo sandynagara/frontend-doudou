@@ -1,16 +1,16 @@
 import React,{useState,useEffect,useRef} from 'react'
 import ButtonTipeInput from './TambahPenduduk/ButtonTipeInput'
-import "./TambahPendudukcroolBar.css"
-import FormEnumerator from './TambahPenduduk/FormEnumerator'
-import FormLokasi from './TambahPenduduk/FormLokasi'
-import FormKeluarga from './TambahPenduduk/FormKeluarga'
-import FormPemukiman from './TambahPenduduk/FormPemukiman'
-import FormIndividu from './TambahPenduduk/FormIndividu'
-import FormPekerjaan from './TambahPenduduk/FormPekerjaan'
-import FormKesehatan from './TambahPenduduk/FormKesehatan'
-import FormPendidikan from './TambahPenduduk/FormPendidikan'
-import FormAkses from './TambahPenduduk/FormAkses'
+import FormEnumerator from './TambahPenduduk/Form/FormEnumerator'
+import FormLokasi from './TambahPenduduk/Form/FormLokasi'
+import FormKeluarga from './TambahPenduduk/Form/FormKeluarga'
+import FormPemukiman from './TambahPenduduk/Form/FormPemukiman'
+import FormIndividu from './TambahPenduduk/Form/FormIndividu'
+import FormPekerjaan from './TambahPenduduk/Form/FormPekerjaan'
+import FormKesehatan from './TambahPenduduk/Form/FormKesehatan'
+import FormPendidikan from './TambahPenduduk/Form/FormPendidikan'
+import FormAkses from './TambahPenduduk/Form/FormAkses'
 import configApi from "../config.json"
+import Swal from "sweetalert2"
 
 function TambahPendudukPage() {
 
@@ -78,10 +78,20 @@ function TambahPendudukPage() {
           kesehatan:kesehatan,
           pendidikan:pendidikan
       }),
-    }).
-    then(res=>res.json()).
-    then(res=>console.log(res)).
-    catch(err=>console.log(err))
+    }).then(res=>res.json()).then(res=>{
+      if(res["RTN"]){
+        Swal.fire({
+          icon: 'success',
+          title: 'Data penduduk berhasil dibuat',
+        })
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Data penduduk gagal dibuat',
+          text: res["MSG"],
+        })
+      }
+    }).catch(err=>console.log(err))
   }
 
   return (
@@ -98,7 +108,7 @@ function TambahPendudukPage() {
           <ButtonTipeInput teks="Pendidikan" pilih={pilih} setPilih={setPilih} wajib={pendidikanWajib}/>
         </div>
         <div className='relative'
-          style={{height:"430px"}}
+           style={{height:"430px"}}
         >
           <div
             className='absolute w-full h-full '

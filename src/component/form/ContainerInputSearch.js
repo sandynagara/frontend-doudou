@@ -3,7 +3,7 @@ import SearchPage from './SearchPage'
 import TambahPendudukPage from './TambahPendudukPage'
 import ButtonHeaderForm from './ButtonHeaderForm'
 
-function FormInputSearch() {
+function FormInputSearch({bangunanSelect,setTambahPemilik}) {
 
     const [pilih, setPilih] = useState("Cari")
 
@@ -21,9 +21,9 @@ function FormInputSearch() {
         </div>
         <div className='relative'>
           <div
-            className='absolute w-full h-full fixed'
+            className='absolute w-full h-full'
             style={ pilih !== "Cari" ? {zIndex:-1}:{}}>
-            <SearchPage/>
+            <SearchPage bangunanSelect={bangunanSelect} setTambahPemilik={setTambahPemilik}/>
           </div>
           <div 
             className='absolute w-full h-full '
