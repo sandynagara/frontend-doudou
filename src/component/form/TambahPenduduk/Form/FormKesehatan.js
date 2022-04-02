@@ -1,11 +1,11 @@
 import React,{useState,useEffect} from 'react'
-import SelectForm from './SelectForm'
+import SelectForm from '../../SelectForm'
 import {GrFormAdd} from "react-icons/gr"
-import InputForm from './InputForm'
-import ButtonTambah from './ButtonTambah'
-import DaftarPenyakit from './DaftarPenyakit'
+import InputForm from '../../InputForm'
+import ButtonTambah from '../ButtonTambah'
+import DaftarPenyakit from '../DaftarPenyakit'
 
-function FormKesehatan({setKesehatan}) {
+function FormKesehatan({setKesehatan=()=>{},edit=true,kesehatan=false}) {
 
     const [jaminanKesehatan, setJaminanKesehatan] = useState("Peserta")
 
@@ -25,6 +25,15 @@ function FormKesehatan({setKesehatan}) {
     const [daftarDisabilitas, setDaftarDisabilitas] = useState([])
     const [disabilitas, setDisabilitas] = useState("Tunanetra (Buta)")
     const [idDeleteDisabilitas, setIdDeleteDisabilitas] = useState(false)
+
+    useEffect(() => {
+        if(kesehatan){
+            setDaftarPenyakit(kesehatan["penyakit"])
+            setDaftarFaskes(kesehatan["kunjungan_faskes"])
+            setDaftarDisabilitas(kesehatan["disabilitas"])
+            setJaminanKesehatan(kesehatan["jaminan_kesehatan"])
+        }
+      }, [kesehatan])
 
     var tambahPenyakit = () => {
         var dataPenyakit
@@ -114,7 +123,7 @@ function FormKesehatan({setKesehatan}) {
   return (
     <div className='overflow-y-scroll scrollbar'
         style={{
-          height:"430px"
+          height:"100%"
           }}
     >
 
@@ -123,7 +132,7 @@ function FormKesehatan({setKesehatan}) {
             <div className="bg-gray-200 mx-2 rounded-full cursor-pointer hover:bg-blue-400"
                 onClick={()=>{setPenyakitTambah(true)}}
             >
-                <GrFormAdd className='hover:fill-white'/>
+               {edit && <GrFormAdd className='hover:fill-white'/>} 
             </div>  
         </div>
 
@@ -143,13 +152,13 @@ function FormKesehatan({setKesehatan}) {
         
 
         {daftarPenyakit !== [] && daftarPenyakit.map((e,index) => {
-        return  <DaftarPenyakit list={e} judul="Nama Penyakit" key={index} setIdDelete={setIdDeletePenyakit}/>
+        return  <DaftarPenyakit list={e} judul="Nama Penyakit" edit={edit} key={index} setIdDelete={setIdDeletePenyakit}/>
         })
         }
 
         <div>
             <div className='py-2'>Jaminan sosial kesehatan</div>
-            <SelectForm name="jaminan-kesehatan" list={listJaminan} onChange={(e)=>setJaminanKesehatan(e.target.value)}/>
+            <SelectForm name="jaminan-kesehatan" list={listJaminan} edit={edit} text={jaminanKesehatan} onChange={(e)=>setJaminanKesehatan(e.target.value)}/>
         </div>
         
 
@@ -158,7 +167,7 @@ function FormKesehatan({setKesehatan}) {
             <div className="bg-gray-200 mx-2 rounded-full cursor-pointer hover:bg-blue-400"
                 onClick={()=>{setFaskesTambah(true)}}
             >
-                <GrFormAdd className='hover:fill-white'/>
+                {edit && <GrFormAdd className='hover:fill-white'/>}
             </div>  
         </div>
 
@@ -175,7 +184,7 @@ function FormKesehatan({setKesehatan}) {
         }
         
         {daftarFaskes !== [] && daftarFaskes.map((e,index) => {
-            return  <DaftarPenyakit list={e} judul="Fasilitas kesehatan" key={index} isi="Jumlah" setIdDelete={setIdDeleteFaskes}/>
+            return  <DaftarPenyakit list={e} judul="Fasilitas kesehatan" edit={edit} key={index} isi="Jumlah" setIdDelete={setIdDeleteFaskes}/>
             })
         }
 
@@ -184,7 +193,7 @@ function FormKesehatan({setKesehatan}) {
             <div className="bg-gray-200 mx-2 rounded-full cursor-pointer hover:bg-blue-400"
                 onClick={()=>{setDisabilitasTambah(true)}}
             >
-                <GrFormAdd className='hover:fill-white'/>
+                {edit && <GrFormAdd className='hover:fill-white'/>}
             </div>  
         </div>
 
@@ -198,7 +207,7 @@ function FormKesehatan({setKesehatan}) {
         }
         
         {daftarDisabilitas !== [] && daftarDisabilitas.map((e,index) => {
-            return  <DaftarPenyakit list={e} judul="Disabilitas" key={index} setIdDelete={setIdDeleteDisabilitas}/>
+            return  <DaftarPenyakit list={e} judul="Disabilitas" key={index} edit={edit} setIdDelete={setIdDeleteDisabilitas}/>
             })
         }
         

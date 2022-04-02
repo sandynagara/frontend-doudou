@@ -1,9 +1,9 @@
 import React,{useEffect, useState} from 'react'
-import SelectForm from './SelectForm'
-import InputForm from './InputForm'
-import ButtonTambah from './ButtonTambah'
+import SelectForm from '../../SelectForm'
+import InputForm from '../../InputForm'
+import ButtonTambah from '../ButtonTambah'
 import {GrFormAdd} from "react-icons/gr"
-import DaftarPenghasilan from './DaftarPenghasilan'
+import DaftarPenghasilan from '../DaftarPenghasilan'
 
 var list = {
   "kondisi-pekerjaan":["Bersekolah","Ibu rumah tangga","TIdak bekerja","Sedang mencari pekerjaan","Bekerja"],
@@ -58,7 +58,7 @@ var listSatuan = {
   "Sumbangan":"Bulan"
 }
 
-function FormPekerjaan({setPekerjaan}) {
+function FormPekerjaan({setPekerjaan=()=>{},edit=true,pekerjaan=false}) {
 
     const [kondisiKerja, setKondisiKerja] = useState("Bersekolah")
     const [pekerjaanUtama, setPerkerjaanUtama] = useState("Petani/pemilik lahan")
@@ -73,7 +73,15 @@ function FormPekerjaan({setPekerjaan}) {
     const [volume, setVolume] = useState()
     const [penghasilanSetahun, setPenghasilanSetahun] = useState()
 
-    
+    useEffect(() => {
+      if(pekerjaan){
+        setKondisiKerja(pekerjaan["kondisi"])
+        setPerkerjaanUtama(pekerjaan["pekerjaan"])
+        setJaminanKerja(pekerjaan["jaminan_ketenagakerjaan"])
+        setDaftarPenghasilan(pekerjaan["penghasilan"])
+        setTambah(false)
+      }
+    }, [pekerjaan])
 
     var tambahPenghasilan = () => {
         var dataPenghasilan = {
@@ -110,20 +118,20 @@ function FormPekerjaan({setPekerjaan}) {
   return (
     <div className='overflow-y-scroll scrollbar'
         style={{
-          height:"430px"
+          height:"100%"
           }}
     >
         <div>
           <div className='py-2'>Kondisi pekerjaan</div>
-          <SelectForm name="kondisi-pekerjaan" list={list["kondisi-pekerjaan"]} onChange={(e)=>{setKondisiKerja(e.target.value)}}/>
+          <SelectForm name="kondisi-pekerjaan" list={list["kondisi-pekerjaan"]} text={kondisiKerja} edit={edit} onChange={(e)=>{setKondisiKerja(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Pekerjaan Utama</div>
-          <SelectForm name="pekerjaan" list={list["pekerjaan"]} onChange={(e)=>{setPerkerjaanUtama(e.target.value)}}/>
+          <SelectForm name="pekerjaan" list={list["pekerjaan"]} text={pekerjaanUtama} edit={edit} onChange={(e)=>{setPerkerjaanUtama(e.target.value)}}/>
         </div>
         <div>
           <div className='py-2'>Jaminan sosial ketenagakerjaan</div>
-          <SelectForm name="jaminan-kerja" list={list["jaminan-kerja"]} onChange={(e)=>{setJaminanKerja(e.target.value)}}/>
+          <SelectForm name="jaminan-kerja" list={list["jaminan-kerja"]} text={jaminanKerja} edit={edit} onChange={(e)=>{setJaminanKerja(e.target.value)}}/>
         </div>
         <div>
           <div className='flex items-center'>
@@ -131,7 +139,7 @@ function FormPekerjaan({setPekerjaan}) {
             <div className="bg-gray-200 mx-2 rounded-full cursor-pointer hover:bg-blue-400"
                 onClick={()=>{setTambah(true)}}
             >
-                <GrFormAdd className='hover:fill-white'/>
+                {edit && <GrFormAdd className='hover:fill-white'/>}
             </div>  
           </div>
 
@@ -148,7 +156,7 @@ function FormPekerjaan({setPekerjaan}) {
         </div>}
           
           {daftarPenghasilan !== [] && daftarPenghasilan.map((e,index)=>{
-              return <DaftarPenghasilan list={e} key={index} setIdDelete={setIdDelete}/>
+              return <DaftarPenghasilan list={e} key={index} edit={edit} setIdDelete={setIdDelete}/>
           }) }
 
         

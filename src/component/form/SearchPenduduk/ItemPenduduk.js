@@ -1,14 +1,27 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 
 function ItemPenduduk({list,pilih,setPilih}) {
+
+    const [select, setSelect] = useState(false)
+
+    useEffect(() => {
+        try{
+            setSelect(pilih["_id"])
+        }catch{
+            setSelect(false)
+        }
+        
+    }, [pilih])
+    
+
   return (
     <div className='w-full py-3 px-5 border-2 my-3 rounded-md  text-left bg-gray-50 cursor-pointer hover:border-sky-300'
-        style={pilih === list["individu"]["nik"] ? {borderColor:"rgb(125 211 252)"} : {}}
+        style={select === list["_id"] ? {borderColor:"rgb(125 211 252)"} : {}}
         onClick={()=>{
-            if(pilih === list["individu"]["nik"]){
+            if(select === list["_id"]){
                 setPilih(false)
             }else{
-                setPilih(list["individu"]["nik"])
+                setPilih(list)
             }
         }}
     >

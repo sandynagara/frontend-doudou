@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import {RiErrorWarningFill} from "react-icons/ri"
-import SelectForm from './SelectForm'
-import InputForm from './InputForm'
+import SelectForm from '../../SelectForm'
+import InputForm from '../../InputForm'
 
 const list = {
   "Tempat tinggal":["Milik sendiri","Kontrak/Sewa","Bebas sewa","Dipinjami","Dinas","Lainnya"],
@@ -25,13 +25,13 @@ const list = {
   "Kondisi rumah":["Kumuh","Tidak kumuh"]
 }
 
-function FormPemukiman({setPemukiman,warning}) {
+function FormPemukiman({setPemukiman=()=>{},warning=()=>{},edit=true,pemukiman=false}) {
 
   const [tempatTinggal, setTempatTinggal] = useState("Milik sendiri")
-  const [statusLahan, setStatusLahan] = useState("Status lahan")
+  const [statusLahan, setStatusLahan] = useState("Milik sendiri")
   const [luasLantai, setLuasLantai] = useState(0)
   const [luasLahan, setLuasLahan] = useState(0)
-  const [lantai, setLantai] = useState("Lantai")
+  const [lantai, setLantai] = useState("Mamer")
   const [dinding, setDinding] = useState("Semen/Beton/Kayu berkualitas tinggi")
   const [jendela, setJendela] = useState("Ada")
   const [atap, setAtap] = useState("Genteng")
@@ -50,6 +50,34 @@ function FormPemukiman({setPemukiman,warning}) {
   const [kondisiRumah, setKondisiRumah] = useState("Kumuh")
 
   useEffect(() => {
+    
+    if(pemukiman){
+      setTempatTinggal(pemukiman["tempat_tinggal"])
+      setStatusLahan(pemukiman["status_lahan"])
+      setLuasLantai(pemukiman["luas_lantai"])
+      setLuasLahan(pemukiman["luas_lahan"])
+      setLantai(pemukiman["jenis_lantai"])
+      setDinding(pemukiman["dinding"])
+      setJendela(pemukiman["jendela"])
+      setAtap(pemukiman["atap"])
+      setPenerangan(pemukiman["penerangan"])
+      setMemasak(pemukiman["memasak"])
+      setKayuBakar(pemukiman["kayu"])
+      setTPS(pemukiman["tps"])
+      setMCK(pemukiman["mck"])
+      setSumberMandi(pemukiman["sumber_mandi"])
+      setBAB(pemukiman["fasilitas_bab"])
+      setSumberMinum(pemukiman["sumber_minum"])
+      setLimbah(pemukiman["limbah_cair"])
+      setSutet(pemukiman["sutet"])
+      setBantaranSungai(pemukiman["bantaran_sungai"])
+      setLerengBukit(pemukiman["lereng_bukit"])
+      setKondisiRumah(pemukiman["kondisi_rumah"])
+    }
+  }, [pemukiman])
+
+  useEffect(() => {
+    
 
     var pemukiman={
         tempat_tinggal:tempatTinggal,
@@ -92,100 +120,100 @@ function FormPemukiman({setPemukiman,warning}) {
   return (
     <div className='overflow-y-scroll scrollbar'
         style={{
-          height:"430px"
+          height:"100%"
           }}
     >
         <div >
           <div className='py-2'>Tempat tinggal yang ditempati</div>
-          <SelectForm name="Tempat tinggal" list={list["Tempat tinggal"]} onChange={(e)=>{setTempatTinggal(e.target.value)}}/>
+          <SelectForm name="Tempat tinggal" list={list["Tempat tinggal"]} edit={edit} text={tempatTinggal} onChange={(e)=>{setTempatTinggal(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Status lahan tempat tinggal yang ditempati</div>
-          <SelectForm name="Status lahan" list={list["Status lahan"]} onChange={(e)=>{setStatusLahan(e.target.value)}}/>
+          <SelectForm name="Status lahan" list={list["Status lahan"]} edit={edit} text={statusLahan} onChange={(e)=>{setStatusLahan(e.target.value)}}/>
         </div>
         <div >
           <div className='flex items-center'>
             <div className='py-2 mr-2'>Luas lantai tempat tinggal (m<sup>2</sup>)</div>
             {luasLantai === "" &&  <RiErrorWarningFill style={{color:"red"}}/>}
           </div>
-          <InputForm placeholder="Luas lantai" name="luas-lantai-keluarga" type='Number' wajib={true} onChange={(e)=>{setLuasLantai(e.target.value)}}/>
+          <InputForm placeholder="Luas lantai" name="luas-lantai-keluarga" type='Number' edit={edit} text={luasLantai} wajib={true} onChange={(e)=>{setLuasLantai(e.target.value)}}/>
         </div>
         <div >
           <div className='flex items-center'>
             <div className='py-2 mr-2'>Luas lahan tempat tinggal (m<sup>2</sup>)</div>
             {luasLahan === "" &&  <RiErrorWarningFill style={{color:"red"}}/>}
           </div>
-          <InputForm placeholder="Luas lahan" name="luas-lahan-keluarga" type='Number' wajib={true} onChange={(e)=>{setLuasLahan(e.target.value)}}/>
+          <InputForm placeholder="Luas lahan" name="luas-lahan-keluarga" type='Number' edit={edit} text={luasLahan} wajib={true} onChange={(e)=>{setLuasLahan(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Jenis lantai tempat tinggal terluas</div>
-          <SelectForm name="Lantai" list={list["Lantai"]} onChange={(e)=>{setLantai(e.target.value)}}/>
+          <SelectForm name="Lantai" list={list["Lantai"]} edit={edit} text={lantai} onChange={(e)=>{setLantai(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Dinding sebagian besar rumah</div>
-          <SelectForm name="Dinding" list={list["Dinding"]} onChange={(e)=>{setDinding(e.target.value)}}/>
+          <SelectForm name="Dinding" list={list["Dinding"]} edit={edit} text={dinding} onChange={(e)=>{setDinding(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Kondisi jendela rumah</div>
-          <SelectForm name="Jendela" list={list["Jendela"]} onChange={(e)=>{setJendela(e.target.value)}}/>
+          <SelectForm name="Jendela" list={list["Jendela"]} edit={edit} text={jendela} onChange={(e)=>{setJendela(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Jenis atap rumah</div>
-          <SelectForm name="Atap" list={list["Atap"]} onChange={(e)=>{setAtap(e.target.value)}}/>
+          <SelectForm name="Atap" list={list["Atap"]} edit={edit} text={atap} onChange={(e)=>{setAtap(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Penerangan rumah</div>
-          <SelectForm name="Penerangan" list={list["Penerangan"]} onChange={(e)=>{setPenerangan(e.target.value)}}/>
+          <SelectForm name="Penerangan" list={list["Penerangan"]} edit={edit} text={penerangan} onChange={(e)=>{setPenerangan(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Energi untuk memasak</div>
-          <SelectForm name="Memasak" list={list["Memasak"]} onChange={(e)=>{setMemasak(e.target.value)}}/>
+          <SelectForm name="Memasak" list={list["Memasak"]} edit={edit} text={memasak} onChange={(e)=>{setMemasak(e.target.value)}}/>
         </div>
         {memasak === "Kayu bakar" && 
           <div >
             <div className='py-2'>Sumber kayu bakar</div>
-            <SelectForm name="Kayu bakar" list={list["Kayu bakar"]} onChange={(e)=>{setKayuBakar(e.target.value)}}/>
+            <SelectForm name="Kayu bakar" list={list["Kayu bakar"]} edit={edit} text={kayuBakar} onChange={(e)=>{setKayuBakar(e.target.value)}}/>
           </div>
         }
         <div >
           <div className='py-2'>Tempat pembuangan sampah</div>
-          <SelectForm name="TPS" list={list["TPS"]} onChange={(e)=>{setTPS(e.target.value)}}/>
+          <SelectForm name="TPS" list={list["TPS"]} edit={edit} text={TPS} onChange={(e)=>{setTPS(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Fasilitas MCK</div>
-          <SelectForm name="MCK" list={list["MCK"]} onChange={(e)=>{setMCK(e.target.value)}}/>
+          <SelectForm name="MCK" list={list["MCK"]} edit={edit} text={MCK} onChange={(e)=>{setMCK(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Sumber air mandi terbanyak</div>
-          <SelectForm name="Sumber air mandi" list={list["Sumber air mandi"]} onChange={(e)=>{setSumberMandi(e.target.value)}}/>
+          <SelectForm name="Sumber air mandi" list={list["Sumber air mandi"]} edit={edit} text={sumberMandi} onChange={(e)=>{setSumberMandi(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Fasilitas buang air besar</div>
-          <SelectForm name="BAB" list={list["BAB"]} onChange={(e)=>{setBAB(e.target.value)}}/>
+          <SelectForm name="BAB" list={list["BAB"]} edit={edit} text={BAB} onChange={(e)=>{setBAB(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Sumber air minum terbanyak</div>
-          <SelectForm name="Sumber air minum" list={list["Sumber air minum"]} onChange={(e)=>{setSumberMinum(e.target.value)}}/>
+          <SelectForm name="Sumber air minum" list={list["Sumber air minum"]} edit={edit} text={sumberMinum} onChange={(e)=>{setSumberMinum(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Tempat pembuangan limbah cair</div>
-          <SelectForm name="Tempat limbah" list={list["Tempat limbah"]} onChange={(e)=>{setLimbah(e.target.value)}}/>
+          <SelectForm name="Tempat limbah" list={list["Tempat limbah"]} edit={edit} text={limbah} onChange={(e)=>{setLimbah(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Rumah berada di bawah SUTET/SUTT/SUTTAS</div>
-          <SelectForm name="Sutet" list={list["Sutet"]} onChange={(e)=>{setSutet(e.target.value)}}/>
+          <SelectForm name="Sutet" list={list["Sutet"]} edit={edit} text={sutet} onChange={(e)=>{setSutet(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Rumah di bantaran sungai</div>
-          <SelectForm name="Bantaran sungai" list={list["Bantaran sungai"]} onChange={(e)=>{setBantaranSungai(e.target.value)}}/>
+          <SelectForm name="Bantaran sungai" list={list["Bantaran sungai"]} edit={edit} text={bantaranSungai} onChange={(e)=>{setBantaranSungai(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Rumah di lereng bukit/gunung</div>
-          <SelectForm name="Lereng bukit" list={list["Lereng bukit"]} onChange={(e)=>{setLerengBukit(e.target.value)}}/>
+          <SelectForm name="Lereng bukit" list={list["Lereng bukit"]} edit={edit} text={lerengBukit} onChange={(e)=>{setLerengBukit(e.target.value)}}/>
         </div>
         <div >
           <div className='py-2'>Secara keseluruhan kondisi rumah</div>
-          <SelectForm name="Kondisi rumah" list={list["Kondisi rumah"]} onChange={(e)=>{setKondisiRumah(e.target.value)}}/>
+          <SelectForm name="Kondisi rumah" list={list["Kondisi rumah"]} edit={edit} text={kondisiRumah} onChange={(e)=>{setKondisiRumah(e.target.value)}}/>
         </div>
     </div>
   )

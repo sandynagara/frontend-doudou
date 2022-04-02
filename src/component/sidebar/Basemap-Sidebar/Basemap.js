@@ -61,7 +61,7 @@ const jenisBasemap = [
 function Basemap({setInputBasemap ,inputBasemap,open,jenis }) {
 
   return (
-    <div className='w-30 px-0 py-2 duration-500'
+    <div className='w-30 px-0 py-2 duration-500 overflow-y-scroll h-screen scrollBar'
     style={open === jenis ? {marginLeft:"50px"} : {marginLeft:"-300px"}}
     >
         {jenisBasemap.map((basemap)=>{
