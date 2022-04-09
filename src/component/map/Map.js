@@ -5,7 +5,15 @@ import * as WMS from "leaflet.wms";
 import configApi from "../config.json"
 import L from "leaflet";
 
-function Map({setbangunanSelect,bangunanSelect,setOpen,basemap}) {
+function Map({
+  setbangunanSelect,
+  bangunanSelect,
+  setOpen,
+  basemap,
+  opacityBasemap,
+  opacityBangunan,
+  opacityBatas,
+  opacityFoto}) {
   
   const [map, setMap] = useState(false)
   
@@ -16,16 +24,44 @@ function Map({setbangunanSelect,bangunanSelect,setOpen,basemap}) {
   const tileRef = useRef();
 
   const TileLayerHandler = () => {
+    setChange(false)
     return <TileLayer url={basemap} maxZoom={22} />;
   };
 
   useEffect(() => {
-    // if(map){
-    //   tileRef.current
-    //   .getContainer()
-    //   .style.setProperty("filter", `opacity(${opacityBasemap}%)`);
-    // }
+    setChange(true)
+  }, [basemap])
+  
+
+  useEffect(() => {
+    if(map){
+      tileRef.current
+      .getContainer()
+      .style.setProperty("filter", `opacity(${opacityBasemap}%)`);
+    }
   }, [])
+
+  useEffect(() => {
+    if(map){
+      map.target.eachLayer(function(layer) {
+        if(layer._name==="doudou:bangunan"){
+          layer.setOpacity(opacityBangunan*0.01)
+        }else if(layer._name==="doudou:Batas_desa_doudo"){
+          layer.setOpacity(opacityBatas*0.01)
+        }else if(layer._name==="doudou:mosaik_doudo"){
+          layer.setOpacity(opacityFoto*0.01)
+        }
+      });
+    }
+  }, [opacityBangunan,opacityBatas,opacityFoto])
+
+  useEffect(() => {
+    if(map){
+      tileRef.current
+      .getContainer()
+      .style.setProperty("filter", `opacity(${opacityBasemap}%)`);
+    }
+  }, [opacityBasemap])
 
   useEffect(() => {
     if(bangunanSelect){
@@ -44,6 +80,11 @@ function Map({setbangunanSelect,bangunanSelect,setOpen,basemap}) {
     map.setView(center.center);
     return null;
   }
+
+  useEffect(() => {
+      setChange(true)
+  }, [basemap])
+  
 
   var panggil = (cb, url) => {
     fetch(url,{
@@ -99,7 +140,7 @@ function Map({setbangunanSelect,bangunanSelect,setOpen,basemap}) {
     map = useMapEvents({
       click(e) { 
         var url = getFeatureInfoUrl(
-          configApi.SERVER_GEOSERVER_Develop+"geoserver/doudou/wms?",map,e,"bangunan"
+          configApi.SERVER_GEOSERVER+"geoserver/doudou/wms?",map,e,"bangunan"
         );
         panggil((result) => {
             console.log(result)
@@ -107,6 +148,9 @@ function Map({setbangunanSelect,bangunanSelect,setOpen,basemap}) {
               setOpen("Bangunan")
               setbangunanSelect(result["features"][0])
               setGeojsonSelect(result)
+            }else{
+              setGeojsonSelect(false)
+              setPosition(false)
             }
            
         }, url);
@@ -130,8 +174,8 @@ function Map({setbangunanSelect,bangunanSelect,setOpen,basemap}) {
       >
         {change ? <TileLayerHandler /> : <TileLayer ref={tileRef} url={basemap} style={{opacity:"0.5"}} maxZoom={22} />}
         <CustomWMSLayer
-          url={configApi.SERVER_GEOSERVER_Develop+"geoserver/doudou/wms"}
-          layers={"doudou:bangunan"}
+          url={configApi.SERVER_GEOSERVER+"geoserver/doudou/wms"}
+          layers={"doudou:mosaik_doudo"}
           options={{
             format: "image/png",
             transparent: "true",
@@ -139,9 +183,33 @@ function Map({setbangunanSelect,bangunanSelect,setOpen,basemap}) {
             info_format: "application/json",
             identify: false,
             maxZoom: 22,
-            opacity:0.3
           }}
         />
+        <CustomWMSLayer
+            url={configApi.SERVER_GEOSERVER+"geoserver/doudou/wms"}
+            layers={"doudou:Batas_desa_doudo"}
+            options={{
+                format: "image/png",
+                transparent: "true",
+                tiled: "true",
+                info_format: "application/json",
+                identify: false,
+                maxZoom: 22,
+            }}
+        />
+        <CustomWMSLayer
+          url={configApi.SERVER_GEOSERVER+"geoserver/doudou/wms"}
+          layers={"doudou:bangunan"}
+          options={{
+            format: "image/png",
+            transparent: "true",
+            tiled: "true",
+            identify: false,
+            maxZoom: 22,
+            opacity:0.8
+          }}
+        />
+        
         {position && <Changedview center={position}/> }
         {geojsonSelect && <SelectedLayerHandler/>}
         <GetFeatureInfoUrlHandle/>

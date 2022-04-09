@@ -9,9 +9,7 @@ function FormEnumerator({setEnumerator=()=>{},warning=()=>{},edit=true,enumerato
   const [hp, setHp] = useState("")
 
   useEffect(() => {
-    
     if(enumerator){
-      console.log(enumerator,"enumerta")
       setNama(enumerator["nama"])
       setAlamat(enumerator["alamat"])
       setHp(enumerator["hp"])

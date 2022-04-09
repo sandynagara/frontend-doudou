@@ -12,21 +12,21 @@ const list = {
 
 function FormIndividu({setIndividu=()=>{},warning=()=>{},edit=true,individu=false}) {
 
-  const [kk, setKk] = useState("")
-  const [nik, setNik] = useState("")
-  const [nama, setNama] = useState("")
+  const [kk, setKk] = useState("-")
+  const [nik, setNik] = useState("-")
+  const [nama, setNama] = useState("-")
   const [kelamin, setKelamin] = useState("Laki-laki")
-  const [lahir, setLahir] = useState("")
+  const [lahir, setLahir] = useState("-")
   const [perkawinan, setPerkawinan] = useState("Kawin")
   const [agama, setAgama] = useState("Islam")
-  const [suku, setSuku] = useState("")
+  const [suku, setSuku] = useState("-")
   const [wargaNegara, setWargaNegara] = useState("WNI")
-  const [hp, setHp] = useState("")
-  const [nomorWa, setNomorWa] = useState("")
-  const [email, setEmail] = useState("")
-  const [fb, setFb] = useState("")
-  const [twitter, setTwitter] = useState("")
-  const [instagram, setInstagram] = useState("")
+  const [hp, setHp] = useState("-")
+  const [nomorWa, setNomorWa] = useState("-")
+  const [email, setEmail] = useState("-")
+  const [fb, setFb] = useState("-")
+  const [twitter, setTwitter] = useState("-")
+  const [instagram, setInstagram] = useState("-")
 
   useEffect(() => {
     if(individu){

@@ -11,11 +11,11 @@ function Search({open,jenis,setDetailPenduduk,setbangunanSelect}) {
   const [activeFilter, setActiveFilter] = useState(false)
   const [filter, setFilter] = useState()
   const [nama, setNama] = useState("")
-  const [bangunanId, setbangunanId] = useState()
+  const [bangunanId, setbangunanId] = useState(false)
   const [daftarPenduduk, setDaftarPenduduk] = useState(false)
 
   const cariPenduduk = () => {
-    const url = configApi.SERVER_API_Develop + "caripendudukfilter"
+    const url = configApi.SERVER_API + "caripendudukfilter"
     fetch(url,{
       method:"POST",
       credentials:"include",
@@ -28,21 +28,23 @@ function Search({open,jenis,setDetailPenduduk,setbangunanSelect}) {
         filter:filter,
     }),
     }).then(res=>res.json()).then(res=>{
-      setDaftarPenduduk(res)
-      console.log(res)
+      setDaftarPenduduk(res["penduduk"])
+      setActiveFilter(false)
     }).catch(err=>console.log(err))
   }
 
   useEffect(() => {
-    const url = configApi.SERVER_API_Develop +`bangunan/${bangunanId}`
-    fetch(url,{
-      method:"GET",
-      credentials:"include"
-    }).then(res=>res.json()).then(res=>{
-      console.log(res)
-      res["id"] = res["_id"]
-      setbangunanSelect(res)
-    }).catch(err=>console.log(err))
+    if(bangunanId){
+      const url = configApi.SERVER_API +`bangunan/${bangunanId}`
+      fetch(url,{
+        method:"GET",
+        credentials:"include"
+      }).then(res=>res.json()).then(res=>{
+        console.log(res)
+        res["id"] = res["_id"]
+        setbangunanSelect(res)
+      }).catch(err=>console.log(err))
+    }
   }, [bangunanId])
   
 

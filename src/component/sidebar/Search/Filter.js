@@ -43,7 +43,7 @@ function Filter({setFilter,activeFilter}) {
           disabilitas:disabilitas
       }
       setFilter(hasilFilter)
-    }, [rt,pekerjaan,jaminanKerja,penghasilanMax,penghasilanMin,pendidikan,penyakit,jaminanKesehatan,disabilitas])
+    }, [rt,pekerjaan,jaminanKerja,penghasilanMax,penghasilanMin,pendidikan,penyakit,jaminanKesehatan,disabilitas,kondisi])
     
 
   return (

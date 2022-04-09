@@ -16,7 +16,7 @@ function SearchPage({bangunanSelect,setTambahPemilik}) {
       return
     }
     console.log(nama)
-    fetch(configAPi.SERVER_API_Develop + `caripenduduk/${nama}`).
+    fetch(configAPi.SERVER_API + `caripenduduk/${nama}`).
     then(res=>res.json()).
     then(res=>setDaftarPenduduk(res)).
     catch(err=>console.log(err))
@@ -24,7 +24,7 @@ function SearchPage({bangunanSelect,setTambahPemilik}) {
 
   const tambahPemilik = () => {
     console.log(bangunanSelect)
-    fetch(configAPi.SERVER_API_Develop + `tambahpemilik`,{
+    fetch(configAPi.SERVER_API + `tambahpemilik`,{
       method:"PATCH",
       credentials:"include",
       headers: {

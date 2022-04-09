@@ -6,9 +6,13 @@ function InputForm({placeholder,name,type="teks",onChange=()=>{},wajib=false,edi
   const inputData = useRef()
 
   useEffect(() => {
-    if(!edit){
+    if(text !== ""){
       inputData.current.value = text
-      inputData.current.disabled = true
+      if(!edit){
+        inputData.current.disabled = true
+      }else{
+        inputData.current.disabled = false
+      }
     }
   }, [edit,text])
   

@@ -61,7 +61,7 @@ function TambahPendudukPage() {
       pendidikan:pendidikan
     }
     console.log(penduduk)
-    fetch(configApi.SERVER_API_Develop+"penduduk",{
+    fetch(configApi.SERVER_API+"penduduk",{
       method:"POST",
       credentials: 'include',
       headers: {

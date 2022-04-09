@@ -6,7 +6,7 @@ import PemilikBangunan from './PemilikBangunan';
 import L from "leaflet";
 import Swal from "sweetalert2"
 
-function Bangunan({open,jenis,bangunanSelect =false,setTambahPemilik,setDetailPenduduk}) {
+function Bangunan({open,setOpen,jenis,bangunanSelect=false,setTambahPemilik,setDetailPenduduk}) {
 
     const [map, setMap] = useState(false)
     const [daftarPenghuni, setDaftarPenghuni] = useState(false)
@@ -24,14 +24,14 @@ function Bangunan({open,jenis,bangunanSelect =false,setTambahPemilik,setDetailPe
             "pemilik":deletePemilik
           }})
 
-        const url = configApi.SERVER_API_Develop + `deletepemilik`
+        const url = configApi.SERVER_API + `deletepemilik`
         fetch(url,{
             method:"PATCH",
             credentials:"include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-              },body: JSON.stringify({
+            },body: JSON.stringify({
                   id:{
                     "bangunan":bangunanSelect["id"],
                     "pemilik":deletePemilik
@@ -58,7 +58,7 @@ function Bangunan({open,jenis,bangunanSelect =false,setTambahPemilik,setDetailPe
     }, [deletePemilik])
     
     const updatePemilik = () => {
-        const url = configApi.SERVER_API_Develop + `penghuni/${bangunanSelect["id"]}`
+        const url = configApi.SERVER_API + `penghuni/${bangunanSelect["id"]}`
         fetch(url,{
             method:"GET",
             credentials:"include"
@@ -69,6 +69,36 @@ function Bangunan({open,jenis,bangunanSelect =false,setTambahPemilik,setDetailPe
             }else{
                 setDaftarPenghuni(res)
             }
+        }).catch(err=>{
+            setDaftarPenghuni(false)
+        })
+    }
+
+    const hapusBangunan = () => {
+        const url = configApi.SERVER_API + `bangunan`
+        fetch(url,{
+            method:"DELETE",
+            credentials:"include",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },body: JSON.stringify({
+                  id:bangunanSelect["id"]
+            }),
+        }).then(res=>res.json()).then(res=>{
+            if(res["RTN"]){
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Bangunan berhasil dihapus',
+                })
+                updatePemilik()
+            }else{
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Bangunan gagal dihapus',
+                  text: res["MSG"],
+                })
+             }
         }).catch(err=>{
             setDaftarPenghuni(false)
         })
@@ -115,27 +145,61 @@ function Bangunan({open,jenis,bangunanSelect =false,setTambahPemilik,setDetailPe
             {position && <Changedview center={position}/> }
             {bangunanSelect && <SelectedLayerHandler/>}
       </MapContainer>
-      <div className='bg-gray-200 py-2 px-3 cursor-pointer overflow-hidden text-left text-sm flex justify-between items-center'
-            onClick={()=>{setActive(!active)}}
-     
-      >
+    <div className='bg-gray-200 py-2 px-3 cursor-pointer overflow-hidden text-left text-sm flex justify-between items-center'
+        onClick={()=>{
+            if(active === "Penghuni"){
+                setActive(false)
+            }else{
+                setActive("Penghuni")
+            }
+        }}
+        style={active === "Penghuni" ? {backgroundColor:"black",color:'white'} : {}}
+    >
         Penghuni Bangunan
         <IoMdArrowDropdown/>
-      </div>
-    <div className='overflow-hidden duration-200'  
-        style={active ? {height:"400px"} : {height:"0px"}}
+    </div>
+    <div className='overflow-scroll duration-200 scrollbar'  
+        style={active === "Penghuni" ? {height:"calc(100vh - 273px)"} : {height:"0px"}}
     >
         {daftarPenghuni ? daftarPenghuni.map((e)=>{
             return  <PemilikBangunan data={e} setDetailPenduduk={setDetailPenduduk} setDeletePemilik={setDeletePemilik}/>
-        }) : <div className='text-sm py-2 px-2'>
+        }) : 
+        <div className='text-sm py-2'>
             Belum ada penghuni yang terdaftar
-            </div>
+        </div>
         } 
         
-        <div className='bg-sky-500 py-1 text-sm mx-2 my-2 rounded-sm text-white text-center cursor-pointer hover:bg-sky-700'
+        <div className='bg-sky-500 py-1 text-sm my-2 rounded-sm text-white text-center cursor-pointer hover:bg-sky-700'
             onClick={()=>{setTambahPemilik(true)}}
         >
             Tambah
+        </div>
+    </div>
+    <div className='bg-gray-200 py-2 px-3 cursor-pointer overflow-hidden text-left text-sm flex justify-between items-center'
+            onClick={()=>{
+                if(active === "Bangunan"){
+                    setActive(false)
+                }else{
+                    setActive("Bangunan")
+                }
+            }}
+            style={active === "Bangunan" ? {backgroundColor:"black",color:'white'} : {}}
+      >
+        Bangunan
+        <IoMdArrowDropdown/>
+    </div>
+    <div className=' flex px-2 overflow-clip duration-200 text-white text-sm '
+        style={active === "Bangunan" ? {height:"45px",padding:"0.5rem"} : {height:"0px"}}
+    >
+        <div className='bg-red-600 hover:bg-red-700 cursor-pointer mr-1 w-full rounded-sm flex justify-center items-center'
+            onClick={hapusBangunan}
+        >
+            Hapus
+        </div>
+        <div className='bg-gray-400 hover:bg-gray-600 cursor-pointer ml-1 w-full rounded-sm flex justify-center items-center'
+            onClick={()=>setOpen("Edit")}
+        >
+            Edit
         </div>
     </div>
     </div>
